@@ -1,0 +1,14 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "ExtractMacro.jl documentation\n\n\nThis module provides the \n@extract\n macro:\n\n\n@autodocs\nModules = [ExtractMacro]", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#extractmacrojl-documentation", 
+            "text": "This module provides the  @extract  macro:  @autodocs\nModules = [ExtractMacro]", 
+            "title": "ExtractMacro.jl documentation"
+        }
+    ]
+}
