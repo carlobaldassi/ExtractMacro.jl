@@ -53,7 +53,9 @@ macro extract(obj, vars...)
                 $(esc(v)) = $(prepend_obj(v, obj))
             end
         elseif isa(v, Expr)
-            @assert v.head in [:(=), :(=>), :(:=)]
+            if v.head ∉ [:(=), :(=>), :(:=)]
+                error("invalid @extract argument: expression `$(v)` out of an assigment")
+            end
             va = v.args
             @assert length(va) == 2
             ex = quote
@@ -65,22 +67,42 @@ macro extract(obj, vars...)
     ex
 end
 
-prepend_obj(x, obj) = x
-prepend_obj(s::Symbol, obj) = :($(esc(obj)).$s)
-function prepend_obj(body::Expr, obj)
+update_skiplist!(x, skip) = nothing
+update_skiplist!(x::Symbol, skip) = push!(skip, x)
+function update_skiplist!(x::Expr, skip)
+    Meta.isexpr(x, :tuple) || return
+    for a in x.args
+        update_skiplist!(a, skip)
+    end
+end
+
+prepend_obj(x, obj, skip=[]) = x
+prepend_obj(s::Symbol, obj, skip=[]) = s ∈ skip ? esc(s) : :($(esc(obj)).$s)
+function prepend_obj(body::Expr, obj, skip=[])
     if Meta.isexpr(body, :call)
         if body.args[1] != :esc
-            return Expr(body.head, Expr(:escape, body.args[1]), map(x->prepend_obj(x, obj), body.args[2:end])...)
+            return Expr(body.head, Expr(:escape, body.args[1]), map(x->prepend_obj(x, obj, skip), body.args[2:end])...)
         else
             @assert length(body.args) == 2
             return Expr(:escape, body.args[2])
         end
-    elseif Meta.isexpr(body, :ref)
-        return Expr(body.head, prepend_obj(body.args[1], obj), map(esc, body.args[2:end])...)
+    elseif Meta.isexpr(body, [:ref, :.])
+        return Expr(body.head, prepend_obj(body.args[1], obj, skip), map(esc, body.args[2:end])...)
+    elseif Meta.isexpr(body, [:comprehension, :generator])
+        length(body.args) == 2 || error("unsupported expression")
+        Meta.isexpr(body.args[2], :(=)) || error("unsupported expression")
+
+        iter = prepend_obj(body.args[2].args[2], obj, skip)
+
+        var = body.args[2].args[1]
+        update_skiplist!(var, skip)
+
+        ex = prepend_obj(body.args[1], obj, skip)
+
+        return Expr(body.head, ex, Expr(:(=), esc(var), iter))
     else
-        return Expr(body.head, map(x->prepend_obj(x, obj), body.args)...)
+        return Expr(body.head, map(x->prepend_obj(x, obj, skip), body.args)...)
     end
 end
-
 
 end # module
