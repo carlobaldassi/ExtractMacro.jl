@@ -129,32 +129,32 @@ end
 </code></pre>
 
 <p>Extracts fields from composite types. E.g.</p>
-<pre><code>@extract x : a b
-</code></pre>
+<pre><code class="julia">@extract x : a b
 
-<p>is translated to:</p>
-<pre><code>a = x.a
+# is translated to:
+
+a = x.a
 b = x.b
 </code></pre>
 
 <p>The colon is optional: <code>@extract x a b</code> is the same as above. Destination variable names can be changed, and arbitrary functions (including indexing) applied, e.g.:</p>
-<pre><code>@extract x : q=b a1=abs(a[1]) ai=abs(a[i]) y=max(a[1],b)
-</code></pre>
+<pre><code class="julia">@extract x : q=b a1=abs(a[1]) ai=abs(a[i]) y=max(a[1],b)
 
-<p>is translated to:</p>
-<pre><code>q = x.b
+# is translated to:
+
+q = x.b
 a1 = abs(x.a[1])
 ai = abs(x.a[i])
 y = max(x.a[1], x.b)
 </code></pre>
 
 <p>Notice that the <code>i</code> within the indexing expression is left untouched: indexing is special in this regard.</p>
-<p>In order to explicitly avoid symbol manipulation on the right hand side, use <code>esc()</code>: this</p>
-<pre><code>@extract x : y=abs(a[1] + esc(b))
-</code></pre>
+<p>In order to explicitly avoid symbol manipulation on the right hand side, use <code>esc()</code>, e.g.:</p>
+<pre><code class="julia">@extract x : y=abs(a[1] + esc(b))
 
-<p>is translated to:</p>
-<pre><code>y = abs(x.a[1] + b)
+# is translated to:
+
+y = abs(x.a[1] + b) # b is left untouched
 </code></pre>
 
 <p>As mentioned above, since the assignments follow the usual Julia pass-by-reference rules, if you extract a scalar value (e.g. an <code>Int</code>) from a field, and subsequently modify it, the value of the field in the parent object will not be affected. But if you extract a container (e.g. a <code>Vector</code>) and modify its contents, the change will be reflected in the parent object. For example:</p>
