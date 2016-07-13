@@ -7,34 +7,40 @@ export @extract
 
 Extracts fields from composite types. E.g.
 
-    @extract x : a b
+```julia
+@extract x : a b
 
-is translated to:
+# is translated to:
 
-    a = x.a
-    b = x.b
+a = x.a
+b = x.b
+```
 
 The colon is optional: `@extract x a b` is the same as above.
 Destination variable names can be changed, and arbitrary functions (including indexing) applied, e.g.:
 
-    @extract x : q=b a1=abs(a[1]) ai=abs(a[i]) y=max(a[1],b)
+```julia
+@extract x : q=b a1=abs(a[1]) ai=abs(a[i]) y=max(a[1],b)
 
-is translated to:
+# is translated to:
 
-    q = x.b
-    a1 = abs(x.a[1])
-    ai = abs(x.a[i])
-    y = max(x.a[1], x.b)
+q = x.b
+a1 = abs(x.a[1])
+ai = abs(x.a[i])
+y = max(x.a[1], x.b)
+```
 
 Notice that the `i` within the indexing expression is left untouched: indexing is special in this regard.
 
-In order to explicitly avoid symbol manipulation on the right hand side, use `esc()`: this
+In order to explicitly avoid symbol manipulation on the right hand side, use `esc()`, e.g.:
 
-    @extract x : y=abs(a[1] + esc(b))
+```julia
+@extract x : y=abs(a[1] + esc(b))
 
-is translated to:
+# is translated to:
 
-    y = abs(x.a[1] + b)
+y = abs(x.a[1] + b) # b is left untouched
+```
 """
 macro extract(obj, vars...)
     ex = quote end
