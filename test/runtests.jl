@@ -2,6 +2,7 @@ module ExtractMacroTests
 
 using ExtractMacro
 using Base.Test
+using Compat
 
 type X
     i::Int
@@ -134,7 +135,7 @@ function test3X()
 end
 
 macro test_extract_failure(ex...)
-    ex = Expr(:call, :macroexpand, Expr(:quote, Expr(:macrocall, symbol("@extract"), ex...)))
+    @compat ex = Expr(:call, :macroexpand, Expr(:quote, Expr(:macrocall, Symbol("@extract"), ex...)))
     quote
         ex = $ex
         @test Meta.isexpr(ex, :error)
