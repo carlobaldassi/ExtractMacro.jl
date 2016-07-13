@@ -104,8 +104,37 @@
 <p><a id='ExtractMacro.jl-documentation-1'></a></p>
 <h1 id="extractmacrojl-documentation">ExtractMacro.jl documentation</h1>
 <p>This module provides the <code>@extract</code> macro:</p>
-<p><code>@autodocs
-Modules = [ExtractMacro]</code></p></div>
+<p><a id='ExtractMacro.@extract' href='#ExtractMacro.@extract'>#</a>
+<strong><code>ExtractMacro.@extract</code></strong> &mdash; <em>Macro</em>.</p>
+<pre><code>@extract obj : exprs...
+</code></pre>
+
+<p>Extracts fields from composite types. E.g.</p>
+<pre><code>@extract x : a b
+
+# is translated to:
+
+a = x.a
+b = x.b
+</code></pre>
+
+<p>The colon is optional: <code>@extract x a b</code> is the same as above. Destination variable names can be changed, and arbitrary functions (including indexing) applied, e.g.:</p>
+<pre><code>@extract x : q=b a1=abs(a[1]) ai=abs(a[i]) y=max(a[1],b)
+# is translated to:
+q = x.b
+a1 = abs(x.a[1])
+ai = abs(x.a[i])
+y = max(x.a[1], x.b)
+</code></pre>
+
+<p>Notice that the <code>i</code> within the indexing expression is left untouched: indexing is special in this regard.</p>
+<p>In order to explicitly avoid symbol manipulation on the right hand side, use <code>esc()</code>: this</p>
+<pre><code>@extract x : y=abs(a[1] + esc(b))
+
+# is translated to:
+
+y = abs(x.a[1] + b)
+</code></pre></div>
         </div>
 
         <footer class="col-md-12">
