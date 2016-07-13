@@ -4,6 +4,4 @@ get(ENV, "TRAVIS_JULIA_VERSION", "") == "nightly" || exit()
 
 using Coverage
 
-cd(Pkg.dir("Documenter")) do
-    Codecov.submit(Codecov.process_folder())
-end
+Codecov.submit(Codecov.process_folder())
