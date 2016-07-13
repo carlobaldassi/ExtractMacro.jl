@@ -89,17 +89,23 @@ function prepend_obj(body::Expr, obj, skip=[])
     elseif Meta.isexpr(body, [:ref, :.])
         return Expr(body.head, prepend_obj(body.args[1], obj, skip), map(esc, body.args[2:end])...)
     elseif Meta.isexpr(body, [:comprehension, :generator])
-        length(body.args) == 2 || error("unsupported expression")
-        Meta.isexpr(body.args[2], :(=)) || error("unsupported expression")
+        inner_generator = Meta.isexpr(body.args[1], :generator)
+        args = inner_generator ? body.args[1].args : body.args
+        length(args) == 2 || error("unsupported expression")
+        Meta.isexpr(args[2], :(=)) || error("unsupported expression")
 
-        iter = prepend_obj(body.args[2].args[2], obj, skip)
+        iter = prepend_obj(args[2].args[2], obj, skip)
 
-        var = body.args[2].args[1]
+        var = args[2].args[1]
         update_skiplist!(var, skip)
 
-        ex = prepend_obj(body.args[1], obj, skip)
+        ex = prepend_obj(args[1], obj, skip)
+        genargs = Expr(:(=), esc(var), iter)
 
-        return Expr(body.head, ex, Expr(:(=), esc(var), iter))
+        return inner_generator ?
+                Expr(body.head, Expr(:generator, ex, genargs)) :
+                Expr(body.head, ex, genargs)
+
     else
         return Expr(body.head, map(x->prepend_obj(x, obj, skip), body.args)...)
     end
