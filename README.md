@@ -1,80 +1,50 @@
-# ExtractMacro
+# ExtractMacro.jl
 
-[![Build Status](https://travis-ci.org/carlobaldassi/ExtractMacro.jl.svg?branch=master)](https://travis-ci.org/carlobaldassi/ExtractMacro.jl)
+| **Documentation**                       | **Build Status**                                                                                |
+|:---------------------------------------:|:-----------------------------------------------------------------------------------------------:|
+| [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
 
-This package provides a single convenience macro, `@extract`, which helps extracting fields from composite types, e.g. this:
 
-```julia
-@extract x : a b c=a[i]+b[j]
-```
+## Installation
 
-is translated to:
-
-```julia
-a = x.a
-b = x.b
-c = x.a[i] + x.b[j]
-```
-
-The colon after the `x` is optional, its only purpose is to enhance readibility.
-
-Note that since the assignments follow the usual Julia pass-by-reference rules, if you extract a scalar value (e.g. an `Int`) from a field,
-and subsequently modify it, the value of the field in the parent object will not be affected. But if you extract a container (e.g. a `Vector`) and
-modify its contents, the change will be reflected in the parent object. For example:
+The package is not currently registered in `METADATA.jl`; it can be installed with `Pkg.clone`.
 
 ```julia
-type X
-    a::Int
-    v::Vector{Int}
-end
-x = X(1, [2,3,4])
-@extract x : a v
-a = 5     # will not change x.a
-v[1] = 5  # will change x.v[1]
+julia> Pkg.clone("https://github.com/carlobaldassi/ExtractMacro.jl")
 ```
 
-Destination variable names can be changed:
+## Documentation
 
-``` julia
-@extract x : a q=v
-```
+- [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
 
-is equivalent to:
+## Project Status
 
-```
-a = x.a
-q = x.v
-```
+The package is tested against Julia `0.4` and *current* `0.5-dev` on Linux, OS X, and Windows.
 
-Arbitrary functions (including indexing) can be applied:
+## Contributing and Questions
 
-```julia
-@extract x : v1=abs(v[1]) vi=abs(v[i]) y=max(v[1],a)
-```
+Contributions are very welcome, as are feature requests and suggestions. Please open an
+[issue][issues-url] if you encounter any problems or would just like to ask a question.
 
-is equivalent to:
 
-```julia
-v1 = abs(x.v[1])
-vi = abs(x.v[i])
-y = max(x.v[1], x.a)
-```
+[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
+[docs-latest-url]: https://carlobaldassi.github.io/ExtractMacro.jl/latest
 
-Notice that the `i` within the indexing expression is left untouched: indexing is special in this regard.
-In order to use another field to index, you can do:
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://carlobaldassi.github.io/ExtractMacro.jl/stable
 
-```julia
-@extract x : i=a vi=v[i]
-```
+[travis-img]: https://travis-ci.org/carlobaldassi/ExtractMacro.jl.svg?branch=master
+[travis-url]: https://travis-ci.org/carlobaldassi/ExtractMacro.jl
 
-In order to explicitly avoid symbol manipulation on the right hand side, use `esc`:
+[appveyor-img]: https://ci.appveyor.com/api/projects/status/x9jkws1l4xd8q4wy/branch/master?svg=true
+[appveyor-url]: https://ci.appveyor.com/project/carlobaldassi/extractmacro-jl/branch/master
 
-```julia
-@extract x : y=abs(v[1] + esc(a))
-```
+[codecov-img]: https://codecov.io/gh/carlobaldassi/ExtractMacro.jl/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/carlobaldassi/ExtractMacro.jl
 
-is equivalent to:
+[issues-url]: https://github.com/carlobaldassi/ExtractMacro.jl/issues
 
-```julia
-y = abs(x.v[1] + a)
-```
+[pkg-0.4-img]: http://pkg.julialang.org/badges/ExtractMacro_0.4.svg
+[pkg-0.4-url]: http://pkg.julialang.org/?pkg=ExtractMacro
+[pkg-0.5-img]: http://pkg.julialang.org/badges/ExtractMacro_0.5.svg
+[pkg-0.5-url]: http://pkg.julialang.org/?pkg=ExtractMacro
