@@ -1,0 +1,8 @@
+site_name:        ExtractMacro.jl
+repo_url:         https://github.com/carlobaldassi/ExtractMacro.jl
+site_description: Julia package ExtractMacro.jl
+site_author:      Carlo Baldassi
+docs_dir:         build
+theme:            yeti
+
+
