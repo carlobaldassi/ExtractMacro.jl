@@ -1,20 +1,24 @@
 # ExtractMacro.jl
 
-| **Documentation**                       | **Build Status**                                                                                |
-|:---------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
+*A macro to extract fields from composite objects*
+
+| **Documentation**                                                               | **PackageEvaluator**                                            | **Build Status**                                                                                |
+|:-------------------------------------------------------------------------------:|:---------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
+| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][pkg-0.4-img]][pkg-0.4-url] [![][pkg-0.5-img]][pkg-0.5-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
+
 
 
 ## Installation
 
-The package is not currently registered in `METADATA.jl`; it can be installed with `Pkg.clone`.
+The package is registered in `METADATA.jl`; it can be installed with `Pkg.add`:
 
 ```julia
-julia> Pkg.clone("https://github.com/carlobaldassi/ExtractMacro.jl")
+julia> Pkg.add("ExtractMacro")
 ```
 
 ## Documentation
 
+- [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the documentation.**
 - [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
 
 ## Project Status
