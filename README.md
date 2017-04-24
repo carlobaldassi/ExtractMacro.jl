@@ -2,9 +2,9 @@
 
 *A macro to extract fields from composite objects*
 
-| **Documentation**                                                               | **PackageEvaluator**                                            | **Build Status**                                                                                |
-|:-------------------------------------------------------------------------------:|:---------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][pkg-0.4-img]][pkg-0.4-url] [![][pkg-0.5-img]][pkg-0.5-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
+| **Documentation**                                                               | **PackageEvaluator**                                                                | **Build Status**                                                                                |
+|:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
+| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][pkg-0.4-img]][pkg-url] [![][pkg-0.5-img]][pkg-url] [![][pkg-0.6-img]][pkg-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
 
 
 
@@ -23,7 +23,7 @@ julia> Pkg.add("ExtractMacro")
 
 ## Project Status
 
-The package is tested against Julia `0.4` and *current* `0.5-dev` on Linux, OS X, and Windows.
+The package is tested against Julia `0.4`, `0.5` and current `0.6-pre` on Linux, OS X, and Windows.
 
 ## Contributing and Questions
 
@@ -49,6 +49,6 @@ Contributions are very welcome, as are feature requests and suggestions. Please 
 [issues-url]: https://github.com/carlobaldassi/ExtractMacro.jl/issues
 
 [pkg-0.4-img]: http://pkg.julialang.org/badges/ExtractMacro_0.4.svg
-[pkg-0.4-url]: http://pkg.julialang.org/?pkg=ExtractMacro
 [pkg-0.5-img]: http://pkg.julialang.org/badges/ExtractMacro_0.5.svg
-[pkg-0.5-url]: http://pkg.julialang.org/?pkg=ExtractMacro
+[pkg-0.6-img]: http://pkg.julialang.org/badges/ExtractMacro_0.6.svg
+[pkg-url]: http://pkg.julialang.org/?pkg=ExtractMacro
