@@ -23,7 +23,7 @@ julia> Pkg.add("ExtractMacro")
 
 ## Project Status
 
-The package is tested against Julia `0.4`, `0.5` and current `0.6-pre` on Linux, OS X, and Windows.
+The package is tested against Julia `0.5`, `0.6` and current (at the time of writing) `0.7-DEV` on Linux, OS X, and Windows.
 
 ## Contributing and Questions
 

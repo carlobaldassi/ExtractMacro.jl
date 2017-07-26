@@ -135,7 +135,8 @@ function test3X()
 end
 
 macro test_extract_failure(ex...)
-    @compat ex = Expr(:call, :macroexpand, Expr(:quote, Expr(:macrocall, Symbol("@extract"), ex...)))
+    VERSION ≥ v"0.7-DEV.357" && (ex = [nothing, ex...])
+    ex = Expr(:call, :macroexpand, @__MODULE__, Expr(:quote, Expr(:macrocall, Symbol("@extract"), ex...)))
     quote
         ex = $ex
         @test Meta.isexpr(ex, :error)
@@ -144,7 +145,6 @@ macro test_extract_failure(ex...)
 end
 
 function test4C()
-    @test_extract_failure x :
     @test_extract_failure x : abs(v)
     @test_extract_failure x : v'
     @test_extract_failure x : v[1]
