@@ -1,10 +1,14 @@
 module ExtractMacroTests
 
 using ExtractMacro
-using Base.Test
 using Compat
+if VERSION < v"0.7.0-DEV.1995"
+    using Base.Test
+else
+    using Test
+end
 
-type X
+mutable struct X
     i::Int
     v::Vector{Int}
 end
@@ -77,7 +81,7 @@ function test1X()
     @test s == 15
 end
 
-type Y
+mutable struct Y
     i::Int
     v::Vector{Int}
     z::Vector{Int}
@@ -90,11 +94,11 @@ function test2C()
     @extract y : t=[i for i in v]
     @test t == [i for i in y.v]
 
-    @extract y : t=[2k+v'-j-i for (k,j) in zip(v,z)]
-    @test t == [2k+y.v'-j-y.i for (k,j) in zip(y.v,y.z)]
+    @extract y : t=[2k .+ v' .- j .- i for (k,j) in zip(v,z)]
+    @test t == [2k .+ y.v' .- j .- y.i for (k,j) in zip(y.v,y.z)]
 
-    @extract y : t=[2z+v'-j-i for (z,j) in zip(v,z)]
-    @test t == [2z+y.v'-j-y.i for (z,j) in zip(y.v,y.z)]
+    @extract y : t=[2z .+ v' .- j .- i for (z,j) in zip(v,z)]
+    @test t == [2z .+ y.v' .- j .- y.i for (z,j) in zip(y.v,y.z)]
 end
 
 function test2X()
@@ -103,14 +107,14 @@ function test2X()
     @extract y t=[i for i in v]
     @test t == [i for i in y.v]
 
-    @extract y t=[2k+v'-j-i for (k,j) in zip(v,z)]
-    @test t == [2k+y.v'-j-y.i for (k,j) in zip(y.v,y.z)]
+    @extract y t=[2k .+ v' .- j .- i for (k,j) in zip(v,z)]
+    @test t == [2k .+ y.v' .- j .- y.i for (k,j) in zip(y.v,y.z)]
 
-    @extract y t=[2z+v'-j-i for (z,j) in zip(v,z)]
-    @test t == [2z+y.v'-j-y.i for (z,j) in zip(y.v,y.z)]
+    @extract y t=[2z .+ v' .- j .- i for (z,j) in zip(v,z)]
+    @test t == [2z .+ y.v' .- j .- y.i for (z,j) in zip(y.v,y.z)]
 end
 
-type Z
+mutable struct Z
     x::X
 end
 
@@ -137,10 +141,16 @@ end
 macro test_extract_failure(ex...)
     VERSION ≥ v"0.7-DEV.357" && (ex = [nothing, ex...])
     ex = Expr(:call, :macroexpand, @__MODULE__, Expr(:quote, Expr(:macrocall, Symbol("@extract"), ex...)))
-    quote
-        ex = $ex
-        @test Meta.isexpr(ex, :error)
-        @test isa(ex.args[1], ErrorException)
+    if VERSION ≥ v"0.7-DEV.1676"
+        quote
+            @test_throws LoadError $ex
+        end
+    else
+        quote
+            ex = $ex
+            @test Meta.isexpr(ex, :error)
+            @test isa(ex.args[1], ErrorException)
+        end
     end
 end
 
