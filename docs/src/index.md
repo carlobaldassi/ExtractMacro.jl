@@ -6,7 +6,7 @@ This package provides just one macro, `@extract`, which you can use by entering:
 using ExtractMacro
 ```
 
-The macro creates local variables from expressions involving composite types fields.
+The macro creates local variables from expressions involving composite types (structs) fields.
 It is especially useful to avoid writing expressions of the form `obj.field` repeatedly.
 For example, instead of having code like this:
 
@@ -30,7 +30,7 @@ end
 
 This makes the function look a little bit like a method in some standard OO languages (e.g., C++) where
 class methods bring the class fields in scope. Note however that the `@extract` macro does not work like that:
-it always works by creating local variables. The consequences of this are discussed further after the macro
+it always works by creating local variables. The consequences of this are discussed after the macro
 documentation.
 
 ```@autodocs
@@ -43,7 +43,7 @@ parent object will not be affected. But if you extract a container (e.g. a `Vect
 contents, the change will be reflected in the parent object. For example:
 
 ```julia
-type X
+mutable struct X
     a::Int
     v::Vector{Int}
 end
