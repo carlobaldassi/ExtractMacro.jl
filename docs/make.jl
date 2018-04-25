@@ -1,9 +1,18 @@
 using Documenter, ExtractMacro
 
-makedocs()
+makedocs(
+    modules  = [ExtractMacro],
+    format   = :html,
+    sitename = "ExtractMacro.jl",
+    pages    = Any[
+        "Home" => "index.md",
+       ]
+    )
 
 deploydocs(
-    deps   = Deps.pip("pygments", "mkdocs", "python-markdown-math"),
     repo   = "github.com/carlobaldassi/ExtractMacro.jl.git",
-    julia  = "release"
+    target = "build",
+    deps = nothing,
+    make = nothing,
+    julia  = "0.6"
 )
