@@ -15,7 +15,6 @@ To install the module, use Julia's package manager: start pkg mode by pressing <
 (v1.3) pkg> add ExtractMacro
 ```
 
-Dependencies will be installed automatically.
 The module can then be loaded like any other Julia module:
 
 ```
