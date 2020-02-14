@@ -48,31 +48,21 @@ macro extract(obj, vars...)
     #   @extract X : a b c
     # (basically, we need to override the parsing precedence rules)
     if Meta.isexpr(obj, [:(=), :(=>), :(:=)])
-        if Meta.isexpr(obj.args[1], :(:))
-            # julia 0.6 style
-            vars = Any[Expr(obj.head, obj.args[1].args[2:end]..., obj.args[2:end]...), vars...]
-            obj = obj.args[1].args[1]
-        elseif Meta.isexpr(obj.args[1], :call) && obj.args[1].args[1] == :(:)
-            # julia 0.7 style
+        if Meta.isexpr(obj.args[1], :call) && obj.args[1].args[1] == :(:)
             vars = Any[Expr(obj.head, obj.args[1].args[3:end]..., obj.args[2:end]...), vars...]
             obj = obj.args[1].args[2]
         end
-    elseif Meta.isexpr(obj, :(:))
-        # julia 0.6 style
-        vars = Any[obj.args[2], vars...]
-        obj = obj.args[1]
     elseif Meta.isexpr(obj, :call) && obj.args[1] == :(:)
-        # julia 0.7 style
         vars = Any[obj.args[3], vars...]
         obj = obj.args[2]
     end
     for v in vars
-        if isa(v, Symbol)
+        if v isa Symbol
             ex = quote
                 $ex
                 $(esc(v)) = $(prepend_obj(v, obj))
             end
-        elseif isa(v, Expr)
+        elseif v isa Expr
             if v.head ∉ [:(=), :(=>), :(:=)]
                 error("invalid @extract argument: expression `$(v)` out of an assigment")
             end
