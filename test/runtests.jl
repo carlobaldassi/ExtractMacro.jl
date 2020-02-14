@@ -1,12 +1,7 @@
 module ExtractMacroTests
 
 using ExtractMacro
-using Compat
-if VERSION < v"0.7.0-DEV.1995"
-    using Base.Test
-else
-    using Test
-end
+using Test
 
 mutable struct X
     i::Int
@@ -87,7 +82,6 @@ mutable struct Y
     z::Vector{Int}
 end
 
-
 function test2C()
     y = Y(1, [2,3,4], [5,6,7])
 
@@ -139,18 +133,9 @@ function test3X()
 end
 
 macro test_extract_failure(ex...)
-    VERSION ≥ v"0.7-DEV.357" && (ex = [nothing, ex...])
-    ex = Expr(:call, :macroexpand, @__MODULE__, Expr(:quote, Expr(:macrocall, Symbol("@extract"), ex...)))
-    if VERSION ≥ v"0.7-DEV.1676"
-        quote
-            @test_throws LoadError $ex
-        end
-    else
-        quote
-            ex = $ex
-            @test Meta.isexpr(ex, :error)
-            @test isa(ex.args[1], ErrorException)
-        end
+    ex = Expr(:call, :macroexpand, @__MODULE__, Expr(:quote, Expr(:macrocall, Symbol("@extract"), [nothing, ex...]...)))
+    quote
+        @test_throws LoadError $ex
     end
 end
 
@@ -166,13 +151,21 @@ function test4X()
     @test_extract_failure x v[1]
 end
 
-test1C()
-test1X()
-test2C()
-test2X()
-test3C()
-test3X()
-test4C()
-test4X()
+@testset "plain and indexing expressions" begin
+    test1C()
+    test1X()
+end
+@testset "comprehensions" begin
+    test2C()
+    test2X()
+end
+@testset "nested objects" begin
+    test3C()
+    test3X()
+end
+@testset "failure conditions" begin
+    test4C()
+    test4X()
+end
 
 end # module

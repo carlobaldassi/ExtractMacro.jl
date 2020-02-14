@@ -2,7 +2,7 @@ using Documenter, ExtractMacro
 
 makedocs(
     modules  = [ExtractMacro],
-    format   = :html,
+    format = Documenter.HTML(prettyurls = "--local" ∉ ARGS),
     sitename = "ExtractMacro.jl",
     pages    = Any[
         "Home" => "index.md",
@@ -11,8 +11,4 @@ makedocs(
 
 deploydocs(
     repo   = "github.com/carlobaldassi/ExtractMacro.jl.git",
-    target = "build",
-    deps = nothing,
-    make = nothing,
-    julia  = "0.6"
 )

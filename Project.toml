@@ -1,0 +1,13 @@
+name = "ExtractMacro"
+uuid = "f86d3d12-fd5b-522c-99e9-61577282a1e9"
+version = "1.0.0"
+author = ["Carlo Baldassi <carlobaldassi@gmail.com>"]
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
